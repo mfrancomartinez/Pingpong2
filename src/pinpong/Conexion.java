@@ -4,17 +4,15 @@
  * and open the template in the editor.
  */
 package pinpong;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import static java.lang.Thread.sleep;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
- import javax.swing.Timer;
-
 /**
  *
  * @author Marcos
@@ -26,6 +24,7 @@ public class Conexion {
      int Tiempo,Tiempo2,Tiempo3,Tiempo4;
      String sql;
 String controlador;
+    private Thread t;
  public void PrepararBaseDatos() { 
         try{ 
             controlador="Base.db"; 
@@ -54,17 +53,16 @@ String controlador;
  public void guardarNombre(){
      nombre = JOptionPane.showInputDialog("Inserta el nombre de los contrincantes.");
  }
- public class Tempo{
-     Timer t;
+ public void Tempo(){
+     Thread t = null;
      ArrayList <Integer> a= new ArrayList<>();
-     int h,m,s,cs;
-     ActionListener accion;
-
-        public Tempo() {
-            this.accion = new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    while(Ventana.setVisible=true){
+     int h=0,m=0,s=0,cs = 0;
+            this.t = new Thread();
+     
+                    
+                      try{
+                          sleep(10);
+                      
                         cs++;
                         if(cs==100){
                             cs=0;
@@ -76,19 +74,29 @@ String controlador;
                         }
                         if(m==60){
                             m=0;
-                            ++h;
-                        }
+                            ++h;}
                         
-                    } Tiempo=cs;Tiempo2=s;Tiempo3=m;Tiempo4=h;
+                        } 
+                      
+                      catch (Exception e) {
+             System.out.println("NO");
+         }
+Tiempo=cs;Tiempo2=s;Tiempo3=m;Tiempo4=h;
+                        
+         if(Ventana.setVisible==true){
+             t.start();
+         }else{
+             t.stop();
+         }           
 }
                 
-            }; }
- }
+            
+ 
 
- public void recogerNombreTiempo(){
+    public void recogerNombreTiempo(){
      
-     sql="insert into Nombre(Nombre,Tempo,Tempo2,Tempo3,Tempo4) values"+"("+nombre+","+Tiempo+","+Tiempo2+","+Tiempo3+","+Tiempo4+")";
-     
+     sql="update into Nombre (Nombre,Tempo,Tempo2,Tempo3,Tempo4) values"+"("+nombre+","+Tiempo+","+Tiempo2+","+Tiempo3+","+Tiempo4+")";
+     System.out.println(Tiempo);
      try{
          sentencia.executeUpdate(sql);
      }catch(SQLException ex){

@@ -18,6 +18,5 @@ public class Pinpong {
         conn.guardarNombre();
         Ventana ventana = new Ventana();
         conn.recogerNombreTiempo();
-
     }
 }
