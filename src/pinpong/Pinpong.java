@@ -5,6 +5,8 @@
  */
 package pinpong;
 
+import java.sql.SQLException;
+
 
 /**
  *
@@ -12,7 +14,7 @@ package pinpong;
  */
 public class Pinpong {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
         Conexion conn = new Conexion();
         conn.PrepararBaseDatos();
         conn.guardarNombre();
