@@ -7,6 +7,7 @@ package pinpong;
 import static java.lang.Thread.sleep;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -18,37 +19,40 @@ import javax.swing.JOptionPane;
  * @author Marcos
  */
 public class Conexion {
-  Connection conexion; 
-     Statement sentencia; 
+  Connection conexion = null; 
+   Statement sentencia;
      String nombre;
      int Tiempo,Tiempo2,Tiempo3,Tiempo4;
      String sql;
 String controlador;
     private Thread t;
- public void PrepararBaseDatos() { 
-        try{ 
-            controlador="Base.db"; 
-            
-        } 
-        catch (Exception e) { 
-            JOptionPane.showMessageDialog(null, "Error al cargar el Controlador");
-        } 
-        try { 
-            String DSN=("jdbc:sqlite:"+controlador); 
-            String user=""; 
-            String password=""; 
-            conexion=DriverManager.getConnection("jdbc:sqlite:/home/local/DANIELCASTELAO/csampedroromero/sqlite-jdbc-3.23.1.jar"); 
-        } 
-        catch (SQLException e) { 
-            JOptionPane.showMessageDialog(null,"Error al realizar la conexion "+e);
-        } 
-        try { 
-            sentencia=conexion.createStatement(); 
-        } 
-        catch (Exception e) { 
-            JOptionPane.showMessageDialog(null,"Error al crear el objeto sentencia "+e);
-        } 
-     } 
+ public void PrepararBaseDatos() throws ClassNotFoundException, SQLException {        
+    try
+    {        
+      conexion = DriverManager.getConnection("jdbc:sqlite:Base.db");
+      sentencia = conexion.createStatement();
+
+     } catch(SQLException e)
+    {      
+      System.err.println(e.getMessage());
+    }
+    finally
+    {
+      try
+      {
+        if(conexion != null)
+          conexion.close();
+      }
+      catch(SQLException e)
+      {
+        // Fallo de cierre de conexion.
+        System.err.println(e);
+      }
+    }
+        
+        
+        
+ }
  
  public void guardarNombre(){
      nombre = JOptionPane.showInputDialog("Inserta el nombre de los contrincantes.");
@@ -93,15 +97,17 @@ Tiempo=cs;Tiempo2=s;Tiempo3=m;Tiempo4=h;
             
  
 
-    public void recogerNombreTiempo(){
+    public void recogerNombreTiempo() throws SQLException{
+      sentencia.executeUpdate("drop table if exists Nombre");
+      sentencia.executeUpdate("create table Nombre (nombre string, Tempo float, Tempo2 float, Tempo3 float, Tempo4 float);");
+      sentencia.executeUpdate("insert into Nombre values("+nombre+","+Tiempo+","+Tiempo2+","+Tiempo3+","+Tiempo4+");");
+      ResultSet rs = sentencia.executeQuery("select * from Nombre;");
+      while(rs.next())
+      {        
+        System.out.println("Nombres de los contrincantes = " + rs.getString("nombre"));
+        System.out.println("Tiempo = " + rs.getFloat("Tempo"));
+      }  
      
-     sql="update into Nombre (Nombre,Tempo,Tempo2,Tempo3,Tempo4) values"+"("+nombre+","+Tiempo+","+Tiempo2+","+Tiempo3+","+Tiempo4+")";
-     System.out.println(Tiempo);
-     try{
-         sentencia.executeUpdate(sql);
-     }catch(SQLException ex){
-         JOptionPane.showMessageDialog(null, "Error, sus datos no fueron ingresados"+ex);
-     }
      
  }
 }   
